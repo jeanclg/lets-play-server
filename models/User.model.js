@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, MongooseDocument, Mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 const UserSchema = new Schema({
   name: { type: String, required: true, trim: true },
@@ -16,6 +17,9 @@ const UserSchema = new Schema({
     required: true,
     default: "USER",
   },
+  gamesList: [String],
+  receivedMessages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
+  uploadedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
 });
 
 const UserModel = model("User", UserSchema);
