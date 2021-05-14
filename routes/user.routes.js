@@ -116,4 +116,14 @@ router.get("/profile", isAuthenticated, attachCurrentUser, (req, res) => {
   }
 });
 
+// Listar todos os usuarios cadastrados
+router.get("/users", async (req, res) => {
+  try {
+    const result = await UserModel.find();
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
 module.exports = router;
