@@ -126,4 +126,28 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// Editar usuario especifico
+router.put("/user/:id", async (req, res) => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: req.body },
+      { new: true }
+    );
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
+// Deletar usuario especifico
+router.delete("/user/:id/delete", async (req, res) => {
+  try {
+    const result = await UserModel.deleteOne({ _id: req.params.id });
+    return res.status(200).json({});
+  } catch (err) {
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
 module.exports = router;
