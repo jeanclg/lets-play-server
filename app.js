@@ -15,6 +15,9 @@ app.use("/", userRouter);
 const postRouter = require("./routes/post.routes");
 app.use("/", postRouter);
 
+const messageRouter = require("./routes/message.routes");
+app.use("/", messageRouter);
+
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
 );
