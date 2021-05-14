@@ -56,4 +56,44 @@ router.get("/post/:id", async (req, res) => {
   }
 });
 
+// cRud (Update): Rota para editar o post
+
+router.put("/post/:id", async (req, res) => {
+  try {
+    // O findOneAndUpdate() vai buscar um documento que atenda à consulta do primeiro parâmetro, e, caso encontre, atualizar com o conteúdo do segundo parâmetro. Ao final da atualização, retornará o objeto atualizado
+    const updatedPost = await PostModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: req.body },
+      { new: true }
+    );
+    console.log(updatedPost);
+    // Se o findOne() retornar null, ou seja, não encontrar o review no banco, retornamos um 404 dizendo que não encontramos o review
+    if (!updatedPost) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    return res.status(200).json(updatedPost);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: err });
+  }
+});
+
+// // cruD (Delete): Apaga o post especificado do banco
+
+router.delete("/post/:id", async (req, res) => {
+  try {
+    const deleted = await PostModel.deleteOne({ _id: req.params.id });
+
+    if (!deleted) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    return res.status(200).json({});
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: err });
+  }
+});
+
 module.exports = router;
