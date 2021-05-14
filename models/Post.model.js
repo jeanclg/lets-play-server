@@ -1,9 +1,8 @@
 const { Schema, model } = require("mongoose");
 
 const PostSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: "User" },
   text: { type: String, maxlength: 1000 },
-  data: {type: Date, default: new Date().toLocaleString()}
+  data: { type: Date, default: Date.now },
 });
 
 const PostModel = model("Post", PostSchema);
