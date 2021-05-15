@@ -35,7 +35,7 @@ router.post("/user/:id/post", async (req, res) => {
 router.get("/post", async (req, res) => {
   try {
     // O find() sem filtros traz todos os documentos da collection
-    const posts = await PostModel.find();
+    const posts = await PostModel.find().populate("userId");
     console.log(posts);
 
     // O status 200 é um status genérico de sucesso (OK)

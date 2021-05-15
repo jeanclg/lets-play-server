@@ -59,7 +59,9 @@ router.get("/message", async (req, res) => {
 router.get("/:id/messages", async (req, res) => {
   try {
     // O find() sem filtros traz todos os documentos da collection
-    const messages = await MessageModel.find({ userRecieverId: req.params.id });
+    const messages = await MessageModel.find({
+      userRecieverId: req.params.id,
+    }).populate("userSenderId");
     console.log(messages);
 
     // O status 200 é um status genérico de sucesso (OK)
