@@ -135,8 +135,18 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// Listar usuario especifico
+router.get("/user/:id", async (req, res) => {
+  try {
+    const result = await UserModel.findOne({ _id: req.params.id });
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
 // Editar usuario especifico
-router.put("/user/:id", async (req, res) => {
+router.put("/user/:id/edit", async (req, res) => {
   try {
     const result = await UserModel.findOneAndUpdate(
       { _id: req.params.id },
