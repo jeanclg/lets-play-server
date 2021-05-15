@@ -6,7 +6,7 @@ const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
 
 // Crud (CREATE) - MESSAGE
-// Criar uma nova mensagem
+// Criar uma nova mensagem [Crud] - id da rota é o id que irá RECEBER a mensagem!!!
 router.post(
   "/user/:id/message",
   isAuthenticated,
@@ -16,10 +16,13 @@ router.post(
     console.log(req.body);
 
     try {
+      // Buscar o usuário logado que está disponível através do middleware attachCurrentUser
+      const loggedInUser = req.currentUser;
       // Salva os dados de usuário no banco de dados (MongoDB) usando o body da requisição como parâmetro
       const result = await MessageModel.create({
         ...req.body,
-        userSenderId: req.params.id,
+        userSenderId: loggedInUser._id,
+        userRecieverId: req.params.id,
       });
 
       const user = await UserModel.findOneAndUpdate(
@@ -38,11 +41,25 @@ router.post(
   }
 );
 
-// cRud (Read): Rota para listar todos os posts
+// cRud (Read): Rota para listar todas as mensagens
 router.get("/message", async (req, res) => {
   try {
     // O find() sem filtros traz todos os documentos da collection
     const messages = await MessageModel.find();
+    console.log(messages);
+
+    // O status 200 é um status genérico de sucesso (OK)
+    return res.status(200).json(messages);
+  } catch (err) {
+    return res.status(500).json({ msg: err });
+  }
+});
+
+// cRud (Read): Rota para listar todas as mensagens do usuario
+router.get("/:id/messages", async (req, res) => {
+  try {
+    // O find() sem filtros traz todos os documentos da collection
+    const messages = await MessageModel.find({ userRecieverId: req.params.id });
     console.log(messages);
 
     // O status 200 é um status genérico de sucesso (OK)
