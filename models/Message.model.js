@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 const MessageSchema = new Schema({
   userSenderId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  userRecieverId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   message: { type: String, required: true, maxlength: 500 },
   data: { type: Date, default: Date.now },
 });

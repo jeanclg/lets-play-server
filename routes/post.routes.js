@@ -13,6 +13,7 @@ router.post("/user/:id/post", async (req, res) => {
     // Salva os dados de usuário no banco de dados (MongoDB) usando o body da requisição como parâmetro
     const result = await PostModel.create({
       ...req.body,
+      userId: req.params.id,
     });
 
     const user = await UserModel.findOneAndUpdate(
@@ -44,6 +45,7 @@ router.get("/post", async (req, res) => {
   }
 });
 
+// Listar um post especifico
 router.get("/post/:id", async (req, res) => {
   try {
     const post = await PostModel.findOne({ _id: req.params.id });
