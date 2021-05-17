@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const PostModel = require("../models/Post.model");
+const { find } = require("../models/User.model");
 const UserModel = require("../models/User.model");
 
 // Crud (CREATE) - HTTP POST
@@ -85,6 +86,21 @@ router.put("/post/:id", async (req, res) => {
 
 router.delete("/post/:id", async (req, res) => {
   try {
+    const post = await PostModel.findOne({ _id: req.params.id });
+    const userResult = await UserModel.findOne({ _id: post.userId });
+
+    const { uploadedPosts } = userResult;
+
+    const arr = uploadedPosts.filter(
+      (x) => x.toString() !== post._id.toString()
+    );
+
+    const newUser = await UserModel.findOneAndUpdate(
+      { _id: userResult._id },
+      { uploadedPosts: arr },
+      { new: true }
+    );
+
     const deleted = await PostModel.deleteOne({ _id: req.params.id });
 
     if (!deleted) {

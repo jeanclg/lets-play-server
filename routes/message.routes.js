@@ -107,10 +107,30 @@ router.put("/message/:id", async (req, res) => {
   }
 });
 
-// // cruD (Delete): Apaga o post especificado do banco
+// // cruD (Delete): Apaga a mensagem especificado do banco
 
 router.delete("/message/:id", async (req, res) => {
   try {
+    const message = await MessageModel.findOne({ _id: req.params.id });
+    const userResult = await UserModel.findOne({ _id: message.userRecieverId });
+
+    console.log(message);
+    console.log(userResult);
+
+    const { receivedMessages } = userResult;
+
+    const arr = receivedMessages.filter(
+      (x) => x.toString() !== message._id.toString()
+    );
+
+    console.log(arr);
+
+    const newUser = await UserModel.findOneAndUpdate(
+      { _id: userResult._id },
+      { receivedMessages: arr },
+      { new: true }
+    );
+
     const deleted = await MessageModel.deleteOne({ _id: req.params.id });
 
     if (!deleted) {
